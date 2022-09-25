@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
+using Parabox.CSG;
+// using UnityEngine.ProBuilder;
+using Plate;
 enum Difficulty
 {
     Easy, Medium, Hard
@@ -53,67 +55,53 @@ public class InitPlate : MonoBehaviour
 
     const float HOLE_RAD = 0.5f;
 
+    const float CLAMP_MOUSE = 0.4f;
+
+    const float ROTATE_STEP = 1.0f;
+
+    Vector3 startRotation;
+    Vector3 endRotation;
+
+    Vector3 rotateStep;
+
+    float rotationProgress = -1;
+
+    int rotateState = 0, round = 0;
+
+    Vector2 lastRotate = new Vector2(0, 0);
+
     void Start()
     {
-        modifyPlate();
+
+        CreatePlate();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 rotateRat = mouse_handle();
-        plate_rotate(rotateRat);
-        Quaternion rotation = this.transform.rotation;
-        //transform.Rotate(new Vector3(0, 0, 0.1f));
-        //Debug.Log(this.transform.rotation);
-    }
-
-    Vector2 mouse_handle()
-    {
-        /* TODO : 
-            1. Handle mouse sensitibity
-            2. If user want to click UI component? does the position is within playing area?
-        */
-
-        Vector2 mousePosRat = 2 * new Vector3(Input.mousePosition.y / Screen.width - 0.5f, Input.mousePosition.x / Screen.height - 0.5f);
-        mousePosRat.x = Mathf.Min(1.0f, Mathf.Max(-1.0f, mousePosRat.x));
-        mousePosRat.y = Mathf.Min(1.0f, Mathf.Max(-1.0f, mousePosRat.y));
-        mousePosRat /= 2.5f;
-        Debug.Log(mousePosRat);
-        return mousePosRat;
-    }
-
-    void plate_rotate(Vector2 rotateRat)
-    {
-        /*
-            X : rotate along X-axis
-            Y : rotate along Z-axis
-        */
-        //Debug.Log(rotateRat.x + " " + rotateRat.y);
-        float degreesPerSecond = 90 * Time.deltaTime;
-        /* create mouse position x = 1 : right, -1 : left 
-                                y = 1 : back, -1 : front 
-        */
-        /*rotateRat.x = 0.0f;
-        rotateRat.y = 0.1f;
-        Vector3 lookatPos = new Vector3(transform.position.x + rotateRat.x, transform.position.y, transform.position.z + rotateRat.y);
-
-
-        Vector3 direction = lookatPos - transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, degreesPerSecond);*/
-        Vector3 euler = this.transform.rotation.eulerAngles;
-        // Debug.Log("euler" + euler + " // " + rotateRat.x + " " + rotateRat.y);
-        transform.Rotate(rotateRat.x * 90 - euler.x, 0.0f, rotateRat.y * 90 - euler.z, Space.Self);
 
     }
-
-
-    void modifyPlate()
+    void CreatePlate()
     {
         /*
             Init hole and wall depend on level
         */
+        GameObject holeObj = GameObject.Find("Hole");
+        Model result = CSG.Subtract(this.gameObject, holeObj);
+
+        // Create a gameObject to render the result
+        var composite = new GameObject();
+        composite.AddComponent<MeshFilter>().sharedMesh = result.mesh;
+        composite.AddComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
+        MeshCollider meshc = composite.AddComponent(typeof(MeshCollider)) as MeshCollider;
+
+
+        meshc.sharedMesh = result.mesh; ; // Give it your mesh here.
+        composite.AddComponent(typeof(Plate.Plate));
+
+
+        Destroy(holeObj.gameObject);
+        Destroy(this.gameObject);
     }
 }
