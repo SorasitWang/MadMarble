@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace Plate
 {
     // using UnityEngine.ProBuilder;
@@ -41,7 +42,7 @@ namespace Plate
         }
 
     }
-    public class Plate : MonoBehaviour
+    public class Plate : MonoBehaviour, Playable
     {
         // Start is called before the first frame update
 
@@ -70,30 +71,22 @@ namespace Plate
 
         Vector2 lastRotate = new Vector2(0, 0);
 
+        bool running;
+
         void Start()
         {
             this.gameObject.name = "Plate";
             this.gameObject.transform.position.Set(3, 0, 0);
-            //igidbody rigidBody = this.gameObject.AddComponent<Rigidbody>();
-            //rigidBody.constraints = RigidbodyConstraints.FreezePosition;
 
+            running = true;
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (!running) return;
             Vector2 rotateRat = mouse_handle();
             plate_rotate(rotateRat);
-            Quaternion rotation = this.transform.rotation;
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                // reset
-                round = 0;
-                rotateState = 0;
-            }
-            //transform.Rotate(new Vector3(0, 0, 0.1f));
-            //Debug.Log(this.transform.rotation);
         }
 
         Vector2 mouse_handle()
@@ -107,7 +100,7 @@ namespace Plate
             mousePosRat.x = Mathf.Min(1.0f, Mathf.Max(-1.0f, mousePosRat.x));
             mousePosRat.y = -1 * Mathf.Min(1.0f, Mathf.Max(-1.0f, mousePosRat.y));
             mousePosRat *= CLAMP_MOUSE;
-            Debug.Log(mousePosRat);
+            //Debug.Log(mousePosRat);
             return mousePosRat;
         }
 
@@ -158,6 +151,7 @@ namespace Plate
             Vector3 _rotate = new Vector3(rotateRat.x * 90 - euler.x, 0.0f, rotateRat.y * 90 - euler.z);
 
             transform.Rotate(_rotate.x, 0.0f, _rotate.z);
+            return;
             //return;
             if (rotateState == 0)
             {
@@ -184,35 +178,19 @@ namespace Plate
 
             }
 
-            //Debug.Log("mag " + _rotate + " " + _rotate.magnitude);
-            //if (_rotate.magnitude > 1) _rotate /= 5.0f;
-            // Vector2 diffAngle;
 
-            // if (lastRotate != new Vector2(0, 0))
-            // {
-            //     diffAngle = _rotate - lastRotate;
-            //     //if (diffAngle.magnitude > 1)
-            //     //{
-            //     Debug.Log("diff" + _rotate + " / " + lastRotate + " / " + diffAngle + " = " + (lastRotate + diffAngle / 2.0f));
-            //     //diffAngle.Normalize();
-            //     //_rotate -= diffAngle;
-            //     _rotate = (lastRotate + diffAngle / 2.0f);
-
-            //     //}
-            // }
-
-            // lastRotate = _rotate;
-
-            //_rotate = _rotate.normalized * ROTATE_STEP;
-            //Debug.Log("ro" + _rotate);
-            //transform.Rotate(_rotate.x, 0.0f, _rotate.y);
-            ///_rotate = new Vector2(0, 90) * Time.deltaTime;
-            //transform.Rotate(_rotate.x, 0.0f, _rotate.z);
-            //transform.rotation = Quaternion.LookRotation(newDirection);
         }
 
 
+        public void resume()
+        {
+            running = true;
+        }
 
+        public void stop()
+        {
+            running = false;
+        }
     }
 
 }
