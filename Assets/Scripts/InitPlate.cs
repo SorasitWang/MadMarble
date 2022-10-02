@@ -5,32 +5,12 @@ using UnityEngine.SceneManagement;
 using Parabox.CSG;
 // using UnityEngine.ProBuilder;
 using Plate;
-enum Difficulty
+using Util;
+
+
+public enum Difficulty
 {
     Easy, Medium, Hard
-}
-
-public class DangerHole
-{
-
-    public Vector3 pos;
-
-    public float rad;
-
-    public float force;
-
-    public DangerHole(Vector3 pos, float rad, float force)
-    {
-        this.pos = pos;
-        this.rad = rad;
-        this.force = force;
-    }
-    public DangerHole(Vector3 pos)
-    {
-        this.pos = pos;
-        this.rad = GameObject.Find("Marble").transform.localScale.x + 0.2f;
-        this.force = 1;
-    }
 }
 public class Wall
 {
@@ -63,52 +43,55 @@ public class Wall
     }
 
 }
-public class InitPlate : MonoBehaviour
+
+
+public static class InitPlate
 {
+
+
     // Start is called before the first frame update
 
 
-    [SerializeField]
-    float mouseSensitivity = 1.0f;
 
-    Difficulty level = Difficulty.Easy;
-    GameObject holeObj;
-    List<Vector3> holes;
+    public static float mouseSensitivity = 1.0f;
 
-    Vector3 targetHole;
+    public static Difficulty level = Difficulty.Easy;
+    public static GameObject holeObj;
+    public static List<Vector3> holes;
 
-    List<DangerHole> dangerHoles = new List<DangerHole>();
+    public static Vector3 targetHole;
 
-    Vector3 startRotation;
-    Vector3 endRotation;
-    Vector3 rotateStep;
+    public static List<DangerHole> dangerHoles = new List<DangerHole>();
 
-    int dangerHoleNum = 1;
+    // public static Vector3 startRotation;
+    // public static Vector3 endRotation;
+    // public static Vector3 rotateStep;
 
-    float marbleRad;
+    public static int dangerHoleNum = 1;
 
-    GameObject result;
+    public static float marbleRad;
 
-    void Start()
+    public static GameObject result;
+
+    public static void init()
     {
+        GameObject marbleObj = GameObject.Find("Marble");
+        Marble marble = (Marble)marbleObj.GetComponent(typeof(Marble));
+        marbleRad = marbleObj.transform.localScale.x;
 
-        marbleRad = GameObject.Find("Marble").transform.localScale.x;
-        CreatePlate();
+        createPlate();
+        marble.storeHoles(dangerHoles);
+
 
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    void CreatePlate()
+    public static void createPlate()
     {
         /*
             Init hole and wall depend on level
         */
-        result = this.gameObject;
+        result = GameObject.Find("Template");
         holeObj = GameObject.Find("Hole");
 
         // random position of target gole
@@ -117,9 +100,9 @@ public class InitPlate : MonoBehaviour
         float posRad = Random.Range(0, outRad);
         float angle = Random.Range(0, 360);
         targetHole = new Vector3(Mathf.Cos(angle * Mathf.Rad2Deg) * outRad, 0.0f, Mathf.Sin(angle * Mathf.Rad2Deg) * outRad);
-        targetHole += this.gameObject.transform.position;
+        targetHole += result.transform.position;
         Debug.Log("hole" + angle + new Vector3(Mathf.Cos(angle * Mathf.Rad2Deg) * outRad, 0.0f, Mathf.Sin(angle * Mathf.Rad2Deg) * outRad));
-        csgHole(targetHole);
+        //csgHole(targetHole);
 
 
         // create danger hole
@@ -132,6 +115,7 @@ public class InitPlate : MonoBehaviour
             // prevent infinite loop
             int tryNum = 0;
             tmpPos = new Vector3();
+
             while (true)
             {
                 if (tryNum > 10) break;
@@ -139,16 +123,16 @@ public class InitPlate : MonoBehaviour
                 posRad = Random.Range(0, outRad);
                 angle = Random.Range(0, 360);
                 tmpPos = new Vector3(Mathf.Cos(angle * Mathf.Rad2Deg) * outRad, 0.0f, Mathf.Sin(angle * Mathf.Rad2Deg) * outRad);
-                if (true) // not too near with other hole
+                if (!nearOtherHoles(tmpPos)) // not too near with other hole
                     break;
             }
             if (tryNum > 10)
                 dangerHoleNum -= 1;
             else
             {
-                tmpPos += this.gameObject.transform.position;
+                tmpPos += result.transform.position;
                 Debug.Log("danger" + angle + new Vector3(Mathf.Cos(angle * Mathf.Rad2Deg) * outRad, 0.0f, Mathf.Sin(angle * Mathf.Rad2Deg) * outRad));
-                this.dangerHoles.Add(new DangerHole(tmpPos));
+                dangerHoles.Add(new DangerHole(tmpPos));
                 csgHole(tmpPos);
             }
         }
@@ -157,23 +141,25 @@ public class InitPlate : MonoBehaviour
 
 
         result.AddComponent(typeof(Plate.Plate));
-        Destroy(holeObj.gameObject);
+        UnityEngine.Object.Destroy(holeObj.gameObject);
         //Destroy(this.gameObject);
     }
 
-    private bool nearOtherHoles(Vector3 pos)
+    public static bool nearOtherHoles(Vector3 pos, float offset = 0.2f)
     {
-        if (Vector3.Distance(pos, targetHole) <= 2 * marbleRad + 0.2f)
+
+        if (Vector3.Distance(pos, targetHole) <= 2 * marbleRad + offset)
             return true;
-        for (int i = 0; i < dangerHoleNum; i++)
+        // not include itself yet
+        for (int i = 0; i < dangerHoleNum - 1; i++)
         {
-            if (Vector3.Distance(pos, dangerHoles[i].pos) <= 2 * marbleRad + 0.2f)
+            if (Vector3.Distance(pos, dangerHoles[i].pos) <= 2 * marbleRad + offset)
                 return true;
         }
         return false;
 
     }
-    private void csgHole(Vector3 pos)
+    private static void csgHole(Vector3 pos)
     {
         holeObj.transform.position = new Vector3(pos.x, pos.y, pos.z);
         Model re = CSG.Subtract(result, holeObj);
@@ -188,4 +174,5 @@ public class InitPlate : MonoBehaviour
 
 
     }
+
 }

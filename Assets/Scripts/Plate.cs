@@ -58,10 +58,13 @@ namespace Plate
 
         const float CLAMP_MOUSE = 0.4f;
 
-        const float ROTATE_STEP = 1.0f;
+        // If too much, collider cannot correct detect
+        const float ROTATE_STEP = 0.05f;
 
         Vector3 startRotation;
         Vector3 endRotation;
+
+        Vector2 lastRat;
 
         Vector3 rotateStep;
 
@@ -82,7 +85,7 @@ namespace Plate
         }
 
         // Update is called once per frame
-        void Update()
+        void FixedUpdate()
         {
             if (!running) return;
             Vector2 rotateRat = mouse_handle();
@@ -133,6 +136,34 @@ namespace Plate
                 X : rotate along X-axis
                 Y : rotate along Z-axis
             */
+            // if (posLastFrame == null)
+            // {
+            //     posLastFrame = Input.mousePosition;
+            //     return;
+            // }
+            // Vector2 delta = Input.mousePosition - posLastFrame;
+            // posLastFrame = Input.mousePosition;
+
+            // var axis = Quaternion.AngleAxis(-90f, new Vector3(0, 1.696f, -2.27f) - this.transform.position) * delta;
+            // transform.rotation = Quaternion.AngleAxis(delta.magnitude * 0.1f, axis) * transform.rotation;
+            // return;
+
+            if (lastRat == null)
+                lastRat = rotateRat;
+            Vector2 diff = (rotateRat - lastRat);
+            for (int i = 0; i < 2; i++)
+            {
+                if (Mathf.Abs(diff[i]) > ROTATE_STEP)
+                    diff[i] = Mathf.Sign(diff[i]) * ROTATE_STEP;
+            }
+
+            rotateRat = lastRat + diff;
+            //Debug.Log("delta" + diff + rotateRat + lastRat);
+            lastRat = rotateRat;
+
+
+
+
             //Debug.Log(rotateRat.x + " " + rotateRat.y);
             float degreesPerSecond = 90 * Time.deltaTime;
             /* create mouse position x = 1 : right, -1 : left 
@@ -149,7 +180,7 @@ namespace Plate
             Vector3 euler = this.transform.rotation.eulerAngles;
             // Debug.Log("euler" + euler + " // " + rotateRat.x + " " + rotateRat.y);
             Vector3 _rotate = new Vector3(rotateRat.x * 90 - euler.x, 0.0f, rotateRat.y * 90 - euler.z);
-
+            //Debug.Log("_rotate" + _rotate + euler);
             transform.Rotate(_rotate.x, 0.0f, _rotate.z);
             return;
             //return;
