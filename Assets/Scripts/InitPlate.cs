@@ -145,14 +145,15 @@ public static class InitPlate
         //Destroy(this.gameObject);
     }
 
-    public static bool nearOtherHoles(Vector3 pos, float offset = 0.2f)
+    public static bool nearOtherHoles(Vector3 pos, float offset = 0.2f, bool forHole = true)
     {
 
         if (Vector3.Distance(pos, targetHole) <= 2 * marbleRad + offset)
             return true;
         // not include itself yet
-        for (int i = 0; i < dangerHoleNum - 1; i++)
+        for (int i = 0; i < dangerHoleNum - (forHole ? 1 : 0); i++)
         {
+            Debug.Log("Near" + Vector3.Distance(pos, dangerHoles[i].pos));
             if (Vector3.Distance(pos, dangerHoles[i].pos) <= 2 * marbleRad + offset)
                 return true;
         }

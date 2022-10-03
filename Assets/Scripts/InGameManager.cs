@@ -18,6 +18,7 @@ public class InGameManager : MonoBehaviour
     [SerializeField]
     private GameObject[] starRef;
     GameObject timerObj, starObj;
+
     TextMeshProUGUI timer, scoreUI;
     Plate.Plate plate;
 
@@ -38,6 +39,7 @@ public class InGameManager : MonoBehaviour
         setPlate();
 
         marble = (Marble)GameObject.Find("Marble").GetComponent(typeof(Marble));
+
         //createStar();
     }
 
@@ -146,7 +148,7 @@ public class InGameManager : MonoBehaviour
         while (true)
         {
             // if too near hole or oldPosition, re-random
-            if (!InitPlate.nearOtherHoles(newPosition, 0.5f))
+            if (!InitPlate.nearOtherHoles(newPosition, 0.5f, false))
             {
                 if (starObj != null)
                 {

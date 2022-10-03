@@ -89,7 +89,7 @@ namespace Plate
         {
             if (!running) return;
             Vector2 rotateRat = mouse_handle();
-            plate_rotate(rotateRat);
+            //plate_rotate(rotateRat);
         }
 
         Vector2 mouse_handle()

@@ -7,7 +7,7 @@ public class Marble : MonoBehaviour, Playable
     const float SLOW = 1.5f;
 
     float accuTime = 0.0f;
-
+    Wind wind;
     List<DangerHole> dangerHoles;
     Rigidbody rigidbody;
 
@@ -27,6 +27,8 @@ public class Marble : MonoBehaviour, Playable
         running = true;
 
         dangerHoles = new List<DangerHole>();
+
+        wind = (Wind)GameObject.Find("Wind").GetComponent(typeof(Wind));
     }
 
     // Update is called once per frame
@@ -49,7 +51,8 @@ public class Marble : MonoBehaviour, Playable
         lastVelocity = rigidbody.velocity;
         accuTime += Time.deltaTime;
 
-        rigidbody.AddForce(new Vector3(1, 0, 0) * 0.01f);
+        // Wind force
+        rigidbody.AddForce(new Vector3(wind.direction.normalized.x, 0.0f, wind.direction.normalized.y) * 0.01f);
 
 
 
