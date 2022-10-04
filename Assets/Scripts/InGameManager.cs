@@ -17,9 +17,9 @@ public class InGameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject[] starRef;
-    GameObject timerObj, starObj;
+    GameObject timerObj, starObj, marbleObj;
 
-    TextMeshProUGUI timer, scoreUI;
+    TextMeshProUGUI timer, scoreUI, velocity;
     Plate.Plate plate;
 
     List<Star> stars;
@@ -37,9 +37,11 @@ public class InGameManager : MonoBehaviour
         startScore();
         startTimer();
         setPlate();
+        marbleObj = GameObject.Find("Marble");
+        marble = (Marble)marbleObj.GetComponent(typeof(Marble));
 
-        marble = (Marble)GameObject.Find("Marble").GetComponent(typeof(Marble));
 
+        velocity = (TextMeshProUGUI)GameObject.Find("Velocity").GetComponent(typeof(TextMeshProUGUI));
         //createStar();
     }
 
@@ -48,12 +50,17 @@ public class InGameManager : MonoBehaviour
     {
         setPlate();
         setTimer();
+        setVelocity();
         handleInput();
         // wait for x seconds then create
 
 
     }
 
+    private void setVelocity()
+    {
+        velocity.text = "Velocity : " + Mathf.Round(marbleObj.GetComponent<Rigidbody>().velocity.magnitude * 10f) / 10f;
+    }
     private void setPlate()
     {
         // TODO : how to initial plate after Plate is created. not recurrent checking
@@ -130,8 +137,7 @@ public class InGameManager : MonoBehaviour
     public void collectStar()
     {
         // increase score
-        score += 1;
-        scoreUI.text = "Score : " + score.ToString();
+        updateScore(1);
         // create new start
         createStar();
 
@@ -152,8 +158,7 @@ public class InGameManager : MonoBehaviour
             {
                 if (starObj != null)
                 {
-                    Vector3 oldPosition = starObj.transform.position;
-                    if (Vector3.Distance(newPosition, oldPosition) > 0.2f)
+                    if (!marble.nearMarble(newPosition, 0.5f))
                     {
                         Destroy(starObj);
                         break;
@@ -180,4 +185,17 @@ public class InGameManager : MonoBehaviour
         // rotate according to plate's rotation
         //starObj.transform.rotation = GameObject.Find("Marble").transform.rotation;
     }
+
+    public void colMonster()
+    {
+        updateScore(-1);
+    }
+
+    private void updateScore(int change)
+    {
+        score += change;
+        score = (int)Mathf.Max(0, score);
+        scoreUI.text = "Score : " + score.ToString();
+    }
+
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Util;
+
 public class Marble : MonoBehaviour, Playable
 {
     const float SLOW = 1.5f;
@@ -90,6 +91,30 @@ public class Marble : MonoBehaviour, Playable
         }
         return re;
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("col" + other.gameObject.name);
+        if (other.gameObject.tag == "Star")
+        {
+            InGameManager m = (InGameManager)GameObject.Find("InGameManager").GetComponent(typeof(InGameManager));
+            m.collectStar();
+        }
+        else if (other.gameObject.tag == "Monster")
+        {
+            InGameManager m = (InGameManager)GameObject.Find("InGameManager").GetComponent(typeof(InGameManager));
+            m.colMonster();
+            Destroy(other.gameObject);
+            // attacked affect
+        }
+    }
+
+    public bool nearMarble(Vector3 pos, float threshold)
+    {
+        if (Vector3.Distance(transform.position, pos) < threshold)
+            return true;
+        return false;
     }
 
 }

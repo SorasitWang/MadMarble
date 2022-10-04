@@ -56,7 +56,7 @@ namespace Plate
 
         const float HOLE_RAD = 0.5f;
 
-        const float CLAMP_MOUSE = 0.4f;
+        const float CLAMP_MOUSE = 0.3f;
 
         // If too much, collider cannot correct detect
         const float ROTATE_STEP = 0.05f;
@@ -89,7 +89,7 @@ namespace Plate
         {
             if (!running) return;
             Vector2 rotateRat = mouse_handle();
-            //plate_rotate(rotateRat);
+            plate_rotate(rotateRat);
         }
 
         Vector2 mouse_handle()
