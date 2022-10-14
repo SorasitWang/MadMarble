@@ -119,18 +119,25 @@ public class InGameManager : MonoBehaviour
             // TODO : Handle mouse position? save position before pause and set back when resume? or label position.
             if (running)
             {
+                Time.timeScale = 0;
                 // Suggest : create list of object? if we have more playable objects.
-                marble.stop();
-                plate.stop();
+                //marble.stop();
+                //plate.stop();
                 filter.showPauseUI();
             }
             else
             {
-                marble.resume();
-                plate.resume();
+                Time.timeScale = 1;
+                //marble.resume();
+                //plate.resume();
                 filter.closePauseUI();
             }
             running = !running;
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            // restart
+            restart();
         }
     }
 
@@ -142,6 +149,15 @@ public class InGameManager : MonoBehaviour
         createStar();
 
         // remove old start
+    }
+
+    private void restart()
+    {
+        //clear timer, score, mana bar
+
+        // destroy monster, tornado, star
+
+        // reset marble position
     }
 
     private void createStar()

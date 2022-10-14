@@ -1,6 +1,6 @@
-public interface Playable
-{
-    public void stop();
+// public interface Playable
+// {
+//     public void stop();
 
-    public void resume();
-}
+//     public void resume();
+// }

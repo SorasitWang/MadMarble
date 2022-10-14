@@ -23,9 +23,15 @@
   
   :yellow_square: Particle system&movement
   
-  :red_square: Material changing in runtime
+  :yellow_square: Material changing in runtime
   
   :red_square: Monster animation
+
+  :yellow_square: UI stuff
+
+  :yellow_sqaure: Light
+
+  :red_sqaure: Color style
   
   :red_square: Scene transition (Homepage)
   

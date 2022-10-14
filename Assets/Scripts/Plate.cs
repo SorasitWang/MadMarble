@@ -42,7 +42,7 @@ namespace Plate
         }
 
     }
-    public class Plate : MonoBehaviour, Playable
+    public class Plate : MonoBehaviour
     {
         // Start is called before the first frame update
 

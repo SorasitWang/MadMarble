@@ -134,6 +134,10 @@ public static class InitPlate
                 Debug.Log("danger" + angle + new Vector3(Mathf.Cos(angle * Mathf.Rad2Deg) * outRad, 0.0f, Mathf.Sin(angle * Mathf.Rad2Deg) * outRad));
                 dangerHoles.Add(new DangerHole(tmpPos));
                 csgHole(tmpPos);
+                GameObject particle = (GameObject)Object.Instantiate((UnityEngine.Object)Resources.Load("BlackholeParticle"));
+                particle.transform.parent = GameObject.Find("Template").transform;
+                particle.transform.localPosition = tmpPos + new Vector3(0, 0.03f, 0);
+
             }
         }
 
