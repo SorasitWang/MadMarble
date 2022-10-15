@@ -75,9 +75,9 @@ public static class InitPlate
 
     public static void init()
     {
-        GameObject marbleObj = GameObject.Find("Marble");
-        Marble marble = (Marble)marbleObj.GetComponent(typeof(Marble));
-        marbleRad = marbleObj.transform.localScale.x;
+        //GameObject marbleObj = (GameObject)Marble.Instance;
+        Marble marble = Marble.Instance;
+        marbleRad = marble.transform.localScale.x;
 
         createPlate();
         marble.storeHoles(dangerHoles);
@@ -151,12 +151,15 @@ public static class InitPlate
 
     public static bool nearOtherHoles(Vector3 pos, float offset = 0.2f, bool forHole = true)
     {
+        // for first init
+        if (dangerHoles.Count == 0) return false;
 
         if (Vector3.Distance(pos, targetHole) <= 2 * marbleRad + offset)
             return true;
         // not include itself yet
         for (int i = 0; i < dangerHoleNum - (forHole ? 1 : 0); i++)
         {
+            //Debug.Log("Dangeholes" + dangerHoles + dangerHoleNum + (forHole ? 1 : 0));
             Debug.Log("Near" + Vector3.Distance(pos, dangerHoles[i].pos));
             if (Vector3.Distance(pos, dangerHoles[i].pos) <= 2 * marbleRad + offset)
                 return true;

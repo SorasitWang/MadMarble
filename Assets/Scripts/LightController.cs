@@ -9,17 +9,17 @@ public class LightController : MonoBehaviour
         Control environment light and spotlight for Blackout Event
     */
 
-
+    GameObject spotLight;
     void Start()
     {
-
+        spotLight = GameObject.Find("SpotLight");
     }
 
     void Update()
     {
-        Vector3 marblePos = GameObject.Find("Marble").transform.position;
+        Vector3 marblePos = Marble.Instance.transform.position;
         marblePos.y = 1.0f;
-        GameObject.Find("SpotLight").transform.position = marblePos;
+        spotLight.transform.position = marblePos;
     }
 
 }

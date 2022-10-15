@@ -23,7 +23,7 @@ namespace Util
         public DangerHole(Vector3 pos)
         {
             this.pos = pos;
-            this.rad = GameObject.Find("Marble").transform.localScale.x + 0.2f;
+            this.rad = Marble.Instance.transform.localScale.x + 0.2f;
             this.force = 1;
         }
 

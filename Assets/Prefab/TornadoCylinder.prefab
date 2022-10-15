@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1489243194272233590}
   - component: {fileID: 5596010234332480055}
   - component: {fileID: 209527767183621191}
+  - component: {fileID: 877027175966796977}
   m_Layer: 0
   m_Name: TornadoCylinder
   m_TagString: Tornado
@@ -98,3 +99,15 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &877027175966796977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600943498379468623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72480d75cf5a71046a4424d391723ce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

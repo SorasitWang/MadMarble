@@ -1,5 +1,11 @@
 # Marble
 
+## Need to recheck
+
+- Bounce with tornado
+- Jumpping direction
+
+
 ## CheckList Features
   :red_square: :yellow_square: :green_square: : To do, In progess and (almost) Done respectively. 
   
@@ -35,15 +41,17 @@
   
   :red_square: Scene transition (Homepage)
   
-  :red_square: Visual effect graph
+  :yellow_square: Visual effect graph
   
-  :red_square: Shader graph
+  :yellow_square: Shader graph
   
   :red_square: Creating tree with l-system
   
   :red_square: Deploy to web
   
   :red_square: Multiplayer mode
+
+  :yellow_sqaure: Game design pattern
   
   
   

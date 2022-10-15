@@ -5,40 +5,62 @@ using TMPro;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Experimental.Rendering.Universal;
-using Filter;
 using Util;
 
 public class InGameManager : MonoBehaviour
 {
     // Start is called before the first frame update
+
+    public static InGameManager Instance { get { return _instance; } }
+    private static InGameManager _instance;
     float time = -1.0f;
 
     int score = 0;
 
     [SerializeField]
     private GameObject[] starRef;
-    GameObject timerObj, starObj, marbleObj;
+    GameObject timerObj, starObj;
 
     TextMeshProUGUI timer, scoreUI, velocity;
-    Plate.Plate plate;
+
 
     List<Star> stars;
-    Filter.Filter filter;
-    Marble marble;
-    bool running = false, end = false;
 
+    bool running = false, end = false;
+    private void Awake()
+    {
+        // if the singleton hasn't been initialized yet
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;//Avoid doing anything else
+        }
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
+
+    public void Destroy()
+    {
+        GameObject.Destroy(_instance.gameObject);
+        _instance = null;
+    }
     void Start()
     {
 
-        filter = (Filter.Filter)GameObject.Find("Filter").GetComponent(typeof(Filter.Filter));
         InitPlate.createPlate();
-        plate = null;
+
         running = true;
         startScore();
         startTimer();
-        setPlate();
-        marbleObj = GameObject.Find("Marble");
-        marble = (Marble)marbleObj.GetComponent(typeof(Marble));
+        createStar();
+
+
+
+        // marbleObj = GameObject.Find("Marble");
+
 
 
         velocity = (TextMeshProUGUI)GameObject.Find("Velocity").GetComponent(typeof(TextMeshProUGUI));
@@ -48,7 +70,7 @@ public class InGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        setPlate();
+
         setTimer();
         setVelocity();
         handleInput();
@@ -59,19 +81,9 @@ public class InGameManager : MonoBehaviour
 
     private void setVelocity()
     {
-        velocity.text = "Velocity : " + Mathf.Round(marbleObj.GetComponent<Rigidbody>().velocity.magnitude * 10f) / 10f;
+        velocity.text = "Velocity : " + Mathf.Round(Marble.Instance.GetComponent<Rigidbody>().velocity.magnitude * 10f) / 10f;
     }
-    private void setPlate()
-    {
-        // TODO : how to initial plate after Plate is created. not recurrent checking
-        if (plate == null)
-        {
 
-            if (GameObject.Find("Plate") == null) return;
-            plate = (Plate.Plate)GameObject.Find("Plate").GetComponent(typeof(Plate.Plate));
-            createStar();
-        }
-    }
 
     private void startScore()
     {
@@ -123,14 +135,14 @@ public class InGameManager : MonoBehaviour
                 // Suggest : create list of object? if we have more playable objects.
                 //marble.stop();
                 //plate.stop();
-                filter.showPauseUI();
+                Filter.Instance.showPauseUI();
             }
             else
             {
                 Time.timeScale = 1;
                 //marble.resume();
                 //plate.resume();
-                filter.closePauseUI();
+                Filter.Instance.closePauseUI();
             }
             running = !running;
         }
@@ -174,7 +186,7 @@ public class InGameManager : MonoBehaviour
             {
                 if (starObj != null)
                 {
-                    if (!marble.nearMarble(newPosition, 0.5f))
+                    if (!Marble.Instance.nearMarble(newPosition, 0.5f))
                     {
                         Destroy(starObj);
                         break;
@@ -191,15 +203,13 @@ public class InGameManager : MonoBehaviour
         // some start may have different properties
         ///starObj.transform.position = newPosition;
         starObj = Instantiate(starRef[randomIdx]);
-        starObj.transform.parent = GameObject.Find("Plate").transform;
+        starObj.transform.parent = Plate.Plate.Instance.transform;
         starObj.transform.localPosition = newPosition;
         starObj.transform.localRotation = new Quaternion();
 
         Debug.Log("starPos" + starObj.transform.position + starObj.transform.localPosition);
         //newPosition =
 
-        // rotate according to plate's rotation
-        //starObj.transform.rotation = GameObject.Find("Marble").transform.rotation;
     }
 
     public void colMonster()

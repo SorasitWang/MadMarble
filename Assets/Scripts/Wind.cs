@@ -6,6 +6,8 @@ using UnityEngine;
 public class Wind : MonoBehaviour
 {
     // Start is called before the first frame update
+    public static Wind Instance { get { return _instance; } }
+    private static Wind _instance;
     const float minVelo = 0.2f, maxVelo = 1.0f;
 
     const float minLength = 0.75f, maxLength = 1.5f;
@@ -17,7 +19,26 @@ public class Wind : MonoBehaviour
     const float ROTATE_STEP = 0.1f;
     Transform windCompassT;
 
+    private void Awake()
+    {
+        // if the singleton hasn't been initialized yet
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;//Avoid doing anything else
+        }
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
 
+    public void Destroy()
+    {
+        GameObject.Destroy(_instance.gameObject);
+        _instance = null;
+    }
     void Start()
     {
         transform.rotation = Random.rotation;

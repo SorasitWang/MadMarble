@@ -14,42 +14,16 @@ public class TornadoRespawn : MonoBehaviour
     void Start()
     {
         StartCoroutine(init());
-
-
     }
-
     IEnumerator init()
     {
         yield return new WaitForSeconds(Random.Range(2, 7));
         GameObject spawnTornado = Instantiate(tornadoRef);
-        spawnTornado.transform.parent = GameObject.Find("Plate").transform;
+        spawnTornado.transform.parent = Plate.Plate.Instance.transform;
         Vector3 newPos = Util.Util.randomPos(0.8f, 0.1f);
+        // not near marble
 
         spawnTornado.transform.localPosition = newPos;
-        StartCoroutine(tornadoMovement());
+
     }
-
-    IEnumerator tornadoMovement()
-    {
-        while (true)
-        {
-            // if game is paused, stop respawn
-            yield return new WaitForSeconds(Random.Range(7, 10));
-            destination = Util.Util.randomPos(0.9f);
-
-
-        }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        // move to destination
-        if (destination != null)
-        {
-            Vector3 dir = (destination - transform.localPosition).normalized;
-            transform.localPosition += speed * dir * Time.deltaTime;
-        }
-    }
-
-
 }

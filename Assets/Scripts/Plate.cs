@@ -42,8 +42,12 @@ namespace Plate
         }
 
     }
+
+
     public class Plate : MonoBehaviour
     {
+        public static Plate Instance { get { return _instance; } }
+        private static Plate _instance;
         // Start is called before the first frame update
 
 
@@ -75,7 +79,26 @@ namespace Plate
         Vector2 lastRotate = new Vector2(0, 0);
 
         bool running;
+        private void Awake()
+        {
+            // if the singleton hasn't been initialized yet
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this.gameObject);
+                return;//Avoid doing anything else
+            }
+            if (_instance == null)
+            {
+                _instance = this;
+                DontDestroyOnLoad(this.gameObject);
+            }
+        }
 
+        public void Destroy()
+        {
+            GameObject.Destroy(_instance.gameObject);
+            _instance = null;
+        }
         void Start()
         {
             this.gameObject.name = "Plate";

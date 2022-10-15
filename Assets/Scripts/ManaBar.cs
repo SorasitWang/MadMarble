@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class ManaBar : MonoBehaviour
 {
     // Start is called before the first frame update
-
+    public static ManaBar Instance { get { return _instance; } }
+    private static ManaBar _instance;
     public Slider slider;
 
     int value = 0;
@@ -18,7 +19,26 @@ public class ManaBar : MonoBehaviour
 
     // charge time = 6 second
 
+    private void Awake()
+    {
+        // if the singleton hasn't been initialized yet
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;//Avoid doing anything else
+        }
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
 
+    public void Destroy()
+    {
+        GameObject.Destroy(_instance.gameObject);
+        _instance = null;
+    }
     void Start()
     {
         slider.maxValue = MAX;

@@ -5,12 +5,14 @@ using Util;
 
 public class Marble : MonoBehaviour
 {
+
+    public static Marble Instance { get { return _instance; } }
+    private static Marble _instance;
     const float SLOW = 1.5f, CHARGE_TIME = 5.0f;
 
     bool isJumping = false;
 
     float accuTime = 0.0f, accuCharge = 0.0f;
-    Wind wind;
     List<DangerHole> dangerHoles;
     Rigidbody rigidbody;
 
@@ -18,10 +20,30 @@ public class Marble : MonoBehaviour
 
     Vector3 acceleration, lastVelocity = new Vector3(0, 0, 0);
     Renderer ren;
-    ManaBar mana;
 
     bool running;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        // if the singleton hasn't been initialized yet
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;//Avoid doing anything else
+        }
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    }
+
+    public void Destroy()
+    {
+        GameObject.Destroy(_instance.gameObject);
+        _instance = null;
+    }
+
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -32,9 +54,6 @@ public class Marble : MonoBehaviour
 
         dangerHoles = new List<DangerHole>();
 
-        wind = (Wind)GameObject.Find("Wind").GetComponent(typeof(Wind));
-
-        mana = (ManaBar)GameObject.Find("ManaBar").GetComponent<ManaBar>();
 
         ren = GetComponent<Renderer>();
     }
@@ -68,7 +87,7 @@ public class Marble : MonoBehaviour
         accuTime += Time.deltaTime;
 
         // Wind force
-        rigidbody.AddForce(new Vector3(wind.direction.normalized.x, 0.0f, wind.direction.normalized.y) * 0.01f);
+        rigidbody.AddForce(new Vector3(Wind.Instance.direction.normalized.x, 0.0f, Wind.Instance.direction.normalized.y) * 0.01f);
 
 
 
@@ -78,12 +97,12 @@ public class Marble : MonoBehaviour
 
     private void jump()
     {
-        if (mana.isReady())
+        if (ManaBar.Instance.isReady())
         {
             isJumping = true;
             // Actually, normal vector of plate
             rigidbody.AddForce(Vector3.up * 2.0f, ForceMode.VelocityChange);
-            mana.use();
+            ManaBar.Instance.use();
         }
 
     }
@@ -145,13 +164,13 @@ public class Marble : MonoBehaviour
         Debug.Log("col" + other.gameObject.name);
         if (other.gameObject.tag == "Star")
         {
-            InGameManager m = (InGameManager)GameObject.Find("InGameManager").GetComponent(typeof(InGameManager));
-            m.collectStar();
+
+            InGameManager.Instance.collectStar();
         }
         else if (other.gameObject.tag == "Monster")
         {
-            InGameManager m = (InGameManager)GameObject.Find("InGameManager").GetComponent(typeof(InGameManager));
-            m.colMonster();
+
+            InGameManager.Instance.colMonster();
             Destroy(other.gameObject);
             // attacked affect
             hurtEffect();
