@@ -35,9 +35,9 @@
 
   :yellow_square: UI stuff
 
-  :yellow_sqaure: Light
+  :yellow_square: Light
 
-  :red_sqaure: Color style
+  :red_square: Color style
   
   :red_square: Scene transition (Homepage)
   
@@ -51,7 +51,7 @@
   
   :red_square: Multiplayer mode
 
-  :yellow_sqaure: Game design pattern
+  :yellow_square: Game design pattern
   
   
   
