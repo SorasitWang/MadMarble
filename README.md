@@ -1,5 +1,9 @@
 # Marble
 
+Controlling marble to survive as long as possible by rotating plate.
+
+**WIP**
+
 ## Need to recheck
 
 - Bounce with tornado
@@ -7,51 +11,49 @@
 
 
 ## CheckList Features
-  :red_square: :yellow_square: :green_square: : To do, In progess and (almost) Done respectively. 
-  
-  :green_square: Plate rotation by mouse
-  
-  :yellow_square: Marble movement
-  
-  :green_square: CSG for creating holes
-  
-  :green_square: Post-processing filter
-  
-  :yellow_square: Collision with object
-  
-  :yellow_square: Coroutine handling
-  
-  :yellow_square: Transiton of wind direction
-  
-  :green_square: Multiple camera for wind label
-  
-  :yellow_square: Effect of external force for marble
-  
-  :yellow_square: Particle system&movement
-  
-  :yellow_square: Material changing in runtime
-  
-  :red_square: Monster animation
 
-  :yellow_square: UI stuff
+  - [x] = In progress
+  
+  
+  - [x] ~~Plate rotation by mouse~~
+  
+  - [x] Marble movement
+  
+  - [x] ~~CSG for creating holes~~
+  
+  - [x] ~~Post-processing filter~~
+  
+  - [x] Collision with object
+  
+  - [x] Coroutine handling
+  
+  - [x] Transiton of wind direction
+  
+  - [x] ~~Multiple camera for wind label~~
+  
+  - [x] Effect of external force for marble
+  
+  - [x] Particle system&movement
+  
+  - [x] Material changing in runtime
+  
+  - [x] Monster animation
 
-  :yellow_sqaure: Light
+  - [x] UI stuff
 
-  :red_sqaure: Color style
+  - [ ] Light
   
-  :red_square: Scene transition (Homepage)
+  - [ ] Scene transition (Homepage)
   
-  :yellow_square: Visual effect graph
+  - [x] Visual effect graph
   
-  :yellow_square: Shader graph
+  - [x] Shader graph
   
-  :red_square: Creating tree with l-system
+  - [ ] Deploy to web
   
-  :red_square: Deploy to web
-  
-  :red_square: Multiplayer mode
+  - [ ] Multiplayer mode
 
-  :yellow_sqaure: Game design pattern
+  - [x] Game design pattern
   
   
   
