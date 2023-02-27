@@ -93,7 +93,7 @@ public class InGameManager : MonoBehaviour
         // //timer.autoSizeTextContainer = true;
         scoreUI.fontSize = 24;
         //timer.transform.position = new Vector3(375, 160, 0);
-        scoreUI.alignment = TextAlignmentOptions.Center;
+        //scoreUI.alignment = TextAlignmentOptions.Center;
         scoreUI.extraPadding = true;
         scoreUI.enableWordWrapping = false;
     }
@@ -109,7 +109,7 @@ public class InGameManager : MonoBehaviour
 
         timer.fontSize = 24;
         //timer.transform.position = new Vector3(375, 160, 0);
-        timer.alignment = TextAlignmentOptions.Center;
+        //timer.alignment = TextAlignmentOptions.Center;
 
         timer.extraPadding = true;
 

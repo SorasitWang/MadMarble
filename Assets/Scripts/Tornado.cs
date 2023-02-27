@@ -6,10 +6,15 @@ public class Tornado : MonoBehaviour
 {
     // Start is called before the first frame update
 
-
+    //Transform tornadoT;
     Vector3 destination;
 
     const float speed = 0.03f;
+
+    /*public void setMarbleTransform(Transform t)
+    {
+        tornadoT = t;
+    }*/
     void Start()
     {
         StartCoroutine(tornadoMovement());

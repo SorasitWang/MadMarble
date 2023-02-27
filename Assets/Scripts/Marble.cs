@@ -8,13 +8,14 @@ public class Marble : MonoBehaviour
 
     public static Marble Instance { get { return _instance; } }
     private static Marble _instance;
-    const float SLOW = 1.5f, CHARGE_TIME = 5.0f;
-
+    const float SLOW = 1.5f, CHARGE_TIME = 5.0f, JUMP_FORCE = 3.0f;
+    Color normalColor;
     bool isJumping = false;
-
     float accuTime = 0.0f, accuCharge = 0.0f;
     List<DangerHole> dangerHoles;
     Rigidbody rigidbody;
+    float hurtTime = -1.0f;
+    const float HURT_TIME = 1.0f;
 
     Collider collider;
 
@@ -51,11 +52,12 @@ public class Marble : MonoBehaviour
         collider = GetComponent<Collider>();
 
         running = true;
-
-        dangerHoles = new List<DangerHole>();
-
+        if (dangerHoles.Count == 0)
+            dangerHoles = new List<DangerHole>();
 
         ren = GetComponent<Renderer>();
+
+        normalColor = ren.material.color;
     }
 
     void Update()
@@ -80,19 +82,26 @@ public class Marble : MonoBehaviour
 
             //rigidbody.velocity = rigidbody.velocity - acceleration / SLOW;
 
-            //rigidbody.velocity += holeEffect() * Time.deltaTime;
+            rigidbody.velocity += holeEffect() * Time.deltaTime;
 
         }
         lastVelocity = rigidbody.velocity;
         accuTime += Time.deltaTime;
-
+        hurtTime += Time.deltaTime;
+        if (hurtTime > HURT_TIME)
+            backToNormal();
         // Wind force
         rigidbody.AddForce(new Vector3(Wind.Instance.direction.normalized.x, 0.0f, Wind.Instance.direction.normalized.y) * 0.01f);
+        Debug.Log("wind force : " + new Vector3(Wind.Instance.direction.normalized.x, 0.0f, Wind.Instance.direction.normalized.y));
 
 
 
 
+    }
 
+    private void backToNormal()
+    {
+        ren.material.color = normalColor;
     }
 
     private void jump()
@@ -101,7 +110,7 @@ public class Marble : MonoBehaviour
         {
             isJumping = true;
             // Actually, normal vector of plate
-            rigidbody.AddForce(Vector3.up * 2.0f, ForceMode.VelocityChange);
+            rigidbody.AddForce(Vector3.up * JUMP_FORCE, ForceMode.VelocityChange);
             ManaBar.Instance.use();
         }
 
@@ -136,7 +145,8 @@ public class Marble : MonoBehaviour
 
     public void storeHoles(List<DangerHole> holes)
     {
-        this.dangerHoles = holes;
+        Debug.Log("store " + holes.Count);
+        dangerHoles = holes;
     }
 
     private Vector3 holeEffect()
@@ -144,6 +154,7 @@ public class Marble : MonoBehaviour
         // find acc vector from hole force
         Vector3 re = new Vector3();
         Vector3 force, dir;
+        Debug.Log("hole num " + dangerHoles.Count);
         for (int i = 0; i < dangerHoles.Count; i++)
         {
             Vector3 tmp = dangerHoles[i].calculateForce(transform.position);
@@ -157,6 +168,7 @@ public class Marble : MonoBehaviour
     private void hurtEffect()
     {
         ren.material.color = Color.red;
+        hurtTime = 0.0f;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -171,9 +183,11 @@ public class Marble : MonoBehaviour
         {
 
             InGameManager.Instance.colMonster();
-            Destroy(other.gameObject);
+
+            //Destroy(other.gameObject);
             // attacked affect
             hurtEffect();
+            Destroy(other.gameObject);
         }
     }
 

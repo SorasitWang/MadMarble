@@ -76,11 +76,11 @@ public static class InitPlate
     public static void init()
     {
         //GameObject marbleObj = (GameObject)Marble.Instance;
-        Marble marble = Marble.Instance;
-        marbleRad = marble.transform.localScale.x;
+        //Marble marble = Marble.Instance;
+        //marbleRad = marble.transform.localScale.x;
 
-        createPlate();
-        marble.storeHoles(dangerHoles);
+        //createPlate();
+
 
 
 
@@ -142,7 +142,7 @@ public static class InitPlate
         }
 
 
-
+        GameObject.Find("Marble").GetComponent<Marble>().storeHoles(dangerHoles);
 
         result.AddComponent(typeof(Plate.Plate));
         UnityEngine.Object.Destroy(holeObj.gameObject);

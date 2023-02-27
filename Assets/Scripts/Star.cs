@@ -12,7 +12,7 @@ public class Star : MonoBehaviour
         //transform.localPosition = Util.Util.randomPos(0.8f);
         // WARNING! Plate must be initiated
 
-        //this.transform.parent = GameObject.Find("Plate").transform;
+
 
     }
 
@@ -21,15 +21,6 @@ public class Star : MonoBehaviour
     {
 
     }
-
-    //    private void OnCollisionEnter(Collision other)
-    //     {
-    //         if (other.gameObject.name == "Marble")
-    //         {
-    //             InGameManager m = (InGameManager)GameObject.Find("InGameManager").GetComponent(typeof(InGameManager));
-    //             m.collectStar();
-    //         }
-    //     } 
 
 }
 

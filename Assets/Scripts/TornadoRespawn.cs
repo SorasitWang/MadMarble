@@ -24,6 +24,7 @@ public class TornadoRespawn : MonoBehaviour
         // not near marble
 
         spawnTornado.transform.localPosition = newPos;
+        spawnTornado.transform.localRotation = Quaternion.identity;
 
     }
 }

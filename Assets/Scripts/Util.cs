@@ -41,7 +41,7 @@ namespace Util
             Vector3 force = dir * this.force;
             // distance ; if dist = 2*rad => 1, dist = 0 => 0.25
             float dist = Vector3.Distance(this.pos, pos);
-
+            Debug.Log("hole effect " + force + " * " + distanceEffect(dist));
             return force * distanceEffect(dist);
 
         }
@@ -57,6 +57,34 @@ namespace Util
             float angle = Random.Range(0, 360);
             return new Vector3(Mathf.Cos(angle * Mathf.Rad2Deg) * posRad, hight, Mathf.Sin(angle * Mathf.Rad2Deg) * posRad);
 
+
+        }
+
+        public static IEnumerator fadeOut(float waitTime, GameObject gameObject, bool destroy = false)
+        {
+            // Decrease 1 at a time, 
+            // with a delay equal to the time, 
+            // until the Animation finished / 100.
+            float delay = waitTime / 100;
+            foreach (var rend in gameObject.GetComponentsInChildren<Renderer>(true))
+            {
+                Color color = rend.material.color;
+                while (color.a > 0)
+                {
+                    rend.material.color = new Color(color.r - 0.1f, 0, 0, 0);
+                    Debug.Log("color.a" + color.a);
+                    yield return new WaitForSeconds(delay);
+                }
+            }
+            // Color color = gameObject.GetComponent<Renderer>().material.color;
+            // while (color.a > 0)
+            // {
+            //     gameObject.GetComponent<Renderer>().material.color = new Color(color.r, color.g, color.b, color.a--);
+            //     yield return new WaitForSeconds(delay);
+            // }
+
+            // if (destroy)
+            //     Object.Destroy(gameObject);
         }
 
 
